@@ -4,7 +4,7 @@ This project implements an image encoder and decoder for grayscale images using 
 
 The project consists of the following source files: src/pgmtodif.c (encoder application), src/diftopgm.c (decoder application), src/imgdif.c (differential image calculation and reconstruction logic), and src/codex.c (VLC encoding and decoding functions). The associated header files are include/imgdif.h (for differential image processing) and include/codex.h (for VLC functions). The Makefile contains the project's compilation rules.
 
-To compile, ensure that the necessary dependencies are installed, including the g2x graphics library.
+To compile, ensure that the necessary dependencies are installed, including the g2x graphics library. 
 
 ## Name of participants
 
