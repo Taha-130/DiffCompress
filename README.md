@@ -1,161 +1,159 @@
 # Projet PGM vers DIFF CoDec
 
-Ce projet implémente un encodeur et un décodeur d'images en niveaux de gris à l'aide du codage différentiel et de la compression avec Code à Longueur Variable (CLV). L'encodeur (`pgmtodif`) transforme les fichiers `.pgm` en un format personnalisé `.dif`, tandis que le décodeur (`diftopgm`) inverse le processus pour reconstruire l'image originale. Le projet respecte les spécifications fournies dans le tutoriel sur le codage CLV et utilise le format DIFF avec une structure de fichier stricte et une logique de quantification.
+This project implements an image encoder and decoder for grayscale images using differential coding and compression with Variable Length Coding (VLC). The encoder (pgmtodif) converts .pgm files into a custom .dif format, while the decoder (diftopgm) reverses the process to reconstruct the original image. The project follows the specifications provided in the VLC coding tutorial and uses the DIFF format with a strict file structure and quantization logic.
 
-Le projet est composé des fichiers source suivants : `src/pgmtodif.c` (application de l'encodeur), `src/diftopgm.c` (application du décodeur), `src/imgdif.c` (calcul de l'image différentielle et logique de reconstruction), et `src/codex.c` (fonctions de codage et décodage CLV). Les fichiers d'en-tête associés sont `include/imgdif.h` (pour le traitement différentiel des images) et `include/codex.h` (pour les fonctions CLV). Le fichier Makefile contient les règles de compilation du projet.
+The project consists of the following source files: src/pgmtodif.c (encoder application), src/diftopgm.c (decoder application), src/imgdif.c (differential image calculation and reconstruction logic), and src/codex.c (VLC encoding and decoding functions). The associated header files are include/imgdif.h (for differential image processing) and include/codex.h (for VLC functions). The Makefile contains the project's compilation rules.
 
-Pour compiler, assurez-vous que les dépendances nécessaires sont installées, y compris la bibliothèque graphique `g2x`.
+To compile, ensure that the necessary dependencies are installed, including the g2x graphics library.
 
-## Nom des particpants
+## Name of participants
 
 - SEFOUDINE Taha Thierry
 
 ---
 
-## Structure des fichiers
+## File structure
 
-### Fichiers sources :
+### Source files :
 
-- `src/pgmtodif.c` : Application de l'encodeur.
-- `src/diftopgm.c` : Application du décodeur.
-- `src/imgdif.c` : Logique de calcul de l'image différentielle et de reconstruction.
-- `src/codex.c` : Fonctions de codage et décodage Code à Longueur Variable (CLV).
+- `src/pgmtodif.c` : Encoder application.
+- `src/diftopgm.c` : Decoder application.
+- `src/imgdif.c` : Logic for differential image computation and reconstruction.
+- `src/codex.c` : Functions for Variable-Length Coding (VLC) encoding and decoding.
 
-### Fichiers d'en-tête :
+### Header Files :
 
-- `include/imgdif.h` : En-tête pour les fonctions de traitement des images différentielles.
-- `include/codex.h` : En-tête pour les fonctions liées au CLV.
+- `include/imgdif.h` : Header file for differential image processing functions.
+- `include/codex.h` : Header file for VLC-related functions.
 
-### Fichiers de support :
+### Support Files:
 
-- `Makefile` : Règles de compilation du projet.
-
+- `Makefile` : Compilation rules for the project.
 ---
 
 ## Compilation Instructions
 
-1. Assurez-vous que les dépendances nécessaires, y compris la bibliothèque graphique `g2x`, sont installées. Si vous compilez sur votre propre machine en tant qu'administrateur, utilisez les commandes suivantes pour installer ces dépendances :
+1. Ensure that the necessary dependencies, including the `g2x` graphics library, are installed. If you are compiling on your own machine as an administrator, use the following commands to install these dependencies:
    ```bash
    $ sudo apt install freeglut3 freeglut3-dev
    $ sudo apt install libglu1-mesa-dev mesa-common-dev
    $ sudo apt install libgl1-mesa-dev
    ```
-   - Assurez-vous également d'installer la bibliothèque libg2x globalement sur votre système avant de poursuivre.
-2. Exécutez la commande suivante dans le répertoire racine du projet pour compiler les fichiers :
-
+   
+   -Also make sure to install the libg2x library globally on your system before proceeding.
+2. Run the following command in the project root directory to compile the files:
    ```
    $ make
    ```
 
-   Cela générera deux exécutables :
+   This will generate two executables:
 
    - `pgmtodif` (encodeur)
    - `diftopgm` (décodeur)
 
-3. Pour nettoyer les fichiers générés pendant la compilation, exécutez :
+3. To clean the files generated during compilation, run:
    ```
    $ make clean
    ```
 
 ---
 
-## Exemples d'exécution
+## Execution examples
 
-### Encodage :
+### Encoding :
 
-1. Placez le fichier PGM d'entrée dans le répertoire `PGM/`.
-2. Exécutez l'encodeur :
+1. Place the input PGM file in the `PGM/` directory.
+2. Run the encoder:
    ```bash
    ./pgmtodif ./PGM/image.pgm
    ```
-3. Interagissez avec l'interface graphique pour :
-   - Visualiser les images originales et différentielles.
-   - Afficher les taux de compression.
-   - Enregistrer le fichier compressé sous `./DIFF/image.dif`.
+3. Interact with the GUI to:
+   - View original and differential images.
+   - Show compression ratios.
+   - Save the compressed file as `./DIFF/image.dif`.
 
-### Décodage:
+### Decoding:
 
-1. Placez le fichier `.dif` dans le répertoire `DIFF/`.
-2. Exécutez le décodeur :
+1. Place the `.dif` file in the `DIFF/` directory.
+2. Run the decoder:
    ```
    ./diftopgm ./DIFF/image.dif
    ```
-3. Interagissez avec l'interface graphique pour :
-   - Visualiser les images différentielles et reconstruites.
-   - Enregistrer l'image reconstruite sous `./PGM/image.dif.pgm`.
+3. Interact with the GUI to:
+   - View differential and reconstructed images.
+   - Save the reconstructed image as `./PGM/image.dif.pgm`.
+     
+---
+
+## File Formats
+
+### DIFF format
+
+1. **Header** (11 octets) :
+- Magic number: `0xD1FF` (2 bytes).
+- Width and height: Unsigned integer (2 bytes each).
+- Quantifier information:
+- Number of levels (1 byte).
+- Bits per level (4 bytes).
+
+2. **First Pixel** (1 byte): Raw value of the first pixel.
+3. **Compressed Data**: Encoded differential values.
+
+### PGM Format
+
+- Format: P5 (binary grayscale).
+- Header includes width, height, and maximum gray value.
+- Pixel data is stored as 8-bit unsigned values.
 
 ---
 
-## Formats de Fichiers
+## Features
 
-### Format DIFF
+### Encoder (`pgmtodif`):
 
-1. **En-tête** (11 octets) :
+- Reads grayscale PGM images.
+- Displays original and differential images.
+- Calculates the differential image.
+- Compresses the differential data using VLC.
+- Displays compression statistics.
+- Saves the compressed output in `.dif` format.
+- Provides histograms of pixel distributions.
 
-- Numéro magique : `0xD1FF` (2 octets).
-- Largeur et hauteur : Entier non signé (2 octets chacun).
-- Informations sur le quantificateur :
-  - Nombre de niveaux (1 octet).
-  - Bits par niveau (4 octets).
+### Decoder (`diftopgm`):
 
-2. **Premier Pixel** (1 octet) : Valeur brute du premier pixel.
-3. **Données Compressées** : Valeurs différentielles encodées.
+- Reads `.dif` files.
+- Displays differential and reconstructed images.
+- Decodes and reconstructs the original image.
+- Saves the reconstructed output in PGM format.
+- Provides histograms of pixel distributions.
 
-### Format PGM
+--
 
-- Format : P5 (niveaux de gris binaires).
-- L'en-tête inclut la largeur, la hauteur et la valeur maximale de gris.
-- Les données des pixels sont stockées sous forme de valeurs non signées de 8 bits.
+## Challenges and Improvements
 
----
+### Challenges:
 
-## Fonctionnalités
+- Implement bit-precise operations for VLC encoding/decoding.
+- Handle buffer overflows and padding bits during encoding/decoding.
+- Ensure GUI responsiveness and accurate histogram scaling.
 
-### Encodeur (`pgmtodif`) :
+### Improvements:
 
-- Lit les images PGM en niveaux de gris.
-- Affiche les images originales et différentielles.
-- Calcule l'image différentielle.
-- Compresse les données différentielles en utilisant VLC.
-- Affiche les statistiques de compression.
-- Sauvegarde la sortie compressée au format `.dif`.
-- Fournit des histogrammes des distributions de pixels.
-
-### Décodeur (`diftopgm`) :
-
-- Lit les fichiers `.dif`.
-- Affiche les images différentielles et reconstruites.
-- Décode et reconstruit l'image originale.
-- Sauvegarde la sortie reconstruite au format PGM.
-- Fournit des histogrammes des distributions de pixels.
+- Improved error handling for invalid file formats and unexpected inputs.
+- Optimized memory allocation for large images.
+- Improved quantization logic for better compression performance.
 
 ---
 
-## Défis et Améliorations
+## Known Issues
 
-### Défis :
-
-- Mise en œuvre d'opérations précises au niveau des bits pour l'encodage/décodage VLC.
-- Gestion des débordements de tampon et des bits de remplissage pendant l'encodage/décodage.
-- Assurer la réactivité de l'interface graphique et l'échelle précise des histogrammes.
-
-### Améliorations :
-
-- Gestion améliorée des erreurs pour les formats de fichiers invalides et les entrées inattendues.
-- Allocation de mémoire optimisée pour les grandes images.
-- Logique de quantification améliorée pour de meilleures performances de compression.
-
----
-
-## Problèmes Connus
-
-- Les taux de compression peuvent se dégrader pour les images avec des distributions de pixels non standard.
-- Les histogrammes excluent les valeurs extrêmes pour une meilleure lisibilité.
+- Compression ratios may degrade for images with non-standard pixel distributions.
+- Histograms exclude outliers for better readability.
 
 ---
 
 ## References
 
-- Tutoriel binaire sur l'encodage VLC.
-- Documentation sur le format d'image PGM.
-- Documentation de la bibliothèque graphique `g2x`.
+- Binary tutorial on VLC encoding.
+- Documentation on the PGM image format.
+- Documentation of the `g2x` graphics library.
